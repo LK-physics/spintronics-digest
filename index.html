@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spintronics Monthly Digest — January 2026</title>
+    <style>
+        :root {
+            --primary: #1a3a5c;
+            --accent: #2980b9;
+            --accent-light: #3498db;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #5d6d7e;
+            --border: #e1e8ed;
+            --tag-paper: #27ae60;
+            --tag-news: #e67e22;
+            --tag-conf: #8e44ad;
+            --tag-call: #c0392b;
+            --tag-paper-bg: #eafaf1;
+            --tag-news-bg: #fef5e7;
+            --tag-conf-bg: #f4ecf7;
+            --tag-call-bg: #fdedec;
+            --tag-topic: #2c5f8a;
+            --tag-topic-bg: #eaf0f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #2c5f8a);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        header h1 { font-size: 2rem; margin-bottom: 0.3rem; position: relative; z-index: 1; }
+        header .subtitle { font-size: 1.1rem; opacity: 0.9; position: relative; z-index: 1; }
+        header .period {
+            display: inline-block; background: rgba(255,255,255,0.15);
+            padding: 0.3rem 1rem; border-radius: 20px; margin-top: 0.8rem;
+            font-size: 0.95rem; position: relative; z-index: 1;
+        }
+        header .lab-links { margin-top: 1rem; position: relative; z-index: 1; font-size: 0.9rem; }
+        header .lab-links a { color: #a8d8f0; text-decoration: none; margin: 0 0.8rem; transition: color 0.2s; }
+        header .lab-links a:hover { color: #fff; text-decoration: underline; }
+
+        nav {
+            background: white; border-bottom: 2px solid var(--border); padding: 0;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        nav .nav-inner {
+            max-width: 1200px; margin: 0 auto; display: flex;
+            justify-content: center; gap: 0; flex-wrap: wrap;
+        }
+        nav button {
+            background: none; border: none; padding: 0.9rem 1.5rem; font-size: 0.95rem;
+            cursor: pointer; color: var(--text-light); font-weight: 500;
+            border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap;
+        }
+        nav button:hover { color: var(--accent); background: #f0f7ff; }
+        nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        .count-badge {
+            display: inline-block; background: var(--accent); color: white;
+            font-size: 0.7rem; padding: 0.1rem 0.45rem; border-radius: 10px;
+            margin-left: 0.3rem; vertical-align: middle;
+        }
+
+        main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .section { display: none; }
+        .section.active { display: block; }
+
+        .section-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; }
+        .section-header h2 { font-size: 1.5rem; color: var(--primary); white-space: nowrap; }
+        .section-header .line { flex: 1; height: 2px; background: var(--border); }
+
+        .card {
+            background: var(--card-bg); border-radius: 10px; padding: 1.5rem;
+            margin-bottom: 1.2rem; border: 1px solid var(--border);
+            transition: box-shadow 0.2s, transform 0.15s; position: relative;
+        }
+        .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+
+        .card .rank {
+            position: absolute; top: -10px; left: 20px; background: var(--primary);
+            color: white; width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700;
+        }
+        .card.paper .rank { background: var(--tag-paper); }
+        .card.news .rank { background: var(--tag-news); }
+        .card.conf .rank { background: var(--tag-conf); }
+
+        .card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; padding-right: 2rem; }
+        .card h3 a { color: var(--text); text-decoration: none; transition: color 0.2s; }
+        .card h3 a:hover { color: var(--accent); }
+
+        .card .meta {
+            display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem;
+            font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.7rem;
+        }
+        .card .meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+        .card .summary { font-size: 0.93rem; color: var(--text); line-height: 1.6; }
+
+        .card .tags { margin-top: 0.7rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+        .tag {
+            display: inline-block; padding: 0.15rem 0.6rem;
+            border-radius: 12px; font-size: 0.75rem; font-weight: 500;
+        }
+        .tag-paper { background: var(--tag-paper-bg); color: var(--tag-paper); }
+        .tag-news { background: var(--tag-news-bg); color: var(--tag-news); }
+        .tag-conf { background: var(--tag-conf-bg); color: var(--tag-conf); }
+        .tag-call { background: var(--tag-call-bg); color: var(--tag-call); }
+        .tag-topic { background: var(--tag-topic-bg); color: var(--tag-topic); }
+
+        /* Calls subcategory headers */
+        .call-category {
+            font-size: 1.2rem; color: var(--primary); font-weight: 600;
+            margin: 2rem 0 1rem 0; padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+        .call-category:first-of-type { margin-top: 0.5rem; }
+
+        .call-card {
+            background: var(--card-bg); border-radius: 10px; padding: 1.3rem 1.5rem;
+            margin-bottom: 1rem; border: 1px solid var(--border);
+            transition: box-shadow 0.2s, transform 0.15s;
+        }
+        .call-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+
+        .call-card h3 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+        .call-card h3 a { color: var(--text); text-decoration: none; transition: color 0.2s; }
+        .call-card h3 a:hover { color: var(--accent); }
+
+        .call-card .meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.5rem; }
+        .call-card .summary { font-size: 0.9rem; line-height: 1.5; }
+        .call-card .tags { margin-top: 0.6rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+        .deadline-badge {
+            display: inline-block; background: #e74c3c; color: white;
+            font-size: 0.75rem; padding: 0.15rem 0.6rem; border-radius: 10px; font-weight: 600;
+        }
+        .deadline-badge.upcoming { background: #e67e22; }
+        .deadline-badge.later { background: #27ae60; }
+
+        /* Conference timeline table */
+        .conf-timeline {
+            width: 100%; border-collapse: collapse; margin-top: 1rem;
+            font-size: 0.9rem; background: white; border-radius: 10px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .conf-timeline th {
+            background: var(--primary); color: white; padding: 0.7rem 1rem;
+            text-align: left; font-weight: 600;
+        }
+        .conf-timeline td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); }
+        .conf-timeline tr:last-child td { border-bottom: none; }
+        .conf-timeline tr:hover { background: #f0f7ff; }
+        .conf-timeline a { color: var(--accent); text-decoration: none; }
+        .conf-timeline a:hover { text-decoration: underline; }
+        .conf-timeline .past { color: var(--text-light); opacity: 0.6; }
+
+        footer {
+            text-align: center; padding: 2rem 1rem; color: var(--text-light);
+            font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 2rem;
+        }
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 700px) {
+            header h1 { font-size: 1.4rem; }
+            .card, .call-card { padding: 1.2rem; }
+            nav button { padding: 0.7rem 0.8rem; font-size: 0.85rem; }
+            .conf-timeline { font-size: 0.8rem; }
+            .conf-timeline th, .conf-timeline td { padding: 0.4rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Spintronics Monthly Digest</h1>
+    <p class="subtitle">Curated papers, news, conferences &amp; calls for the Klein Lab &mdash; Bar-Ilan University</p>
+    <div class="period">January 2026</div>
+    <div class="lab-links">
+        <a href="https://sites.biu.ac.il/en/klein-lab-spintronics" target="_blank">Klein Lab</a>
+        <a href="https://physics.biu.ac.il/en/node/586" target="_blank">Faculty Page</a>
+        <a href="https://scholar.google.com/citations?user=Re2msEEAAAAJ" target="_blank">Google Scholar</a>
+    </div>
+</header>
+
+<nav>
+    <div class="nav-inner">
+        <button class="active" onclick="showSection('papers', this)">
+            Papers <span class="count-badge">10</span>
+        </button>
+        <button onclick="showSection('news', this)">
+            News <span class="count-badge">10</span>
+        </button>
+        <button onclick="showSection('conferences', this)">
+            Conferences <span class="count-badge">22</span>
+        </button>
+        <button onclick="showSection('calls', this)">
+            Calls <span class="count-badge">36</span>
+        </button>
+    </div>
+</nav>
+
+<main>
+
+<!-- ========== PAPERS SECTION ========== -->
+<div id="papers" class="section active">
+    <div class="section-header">
+        <h2>Top 10 Papers &mdash; January 2026</h2>
+        <div class="line"></div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">1</div>
+        <h3><a href="https://www.nature.com/articles/s44306-025-00119-7" target="_blank">Parallel Writing of Magnetic Tunnel Junctions by Electrical Control of Interlayer Magnetic Coupling</a></h3>
+        <div class="meta">
+            <span>M. Yang, L. Zhao, R. Shi et al.</span>
+            <span>npj Spintronics 4, 1 (2026)</span>
+            <span>Jan 9, 2026</span>
+        </div>
+        <p class="summary">Demonstrates a parallel writing architecture for MTJs using unipolar current through voltage-controlled magnetic anisotropy (VCMA). Achieves deterministic switching governed solely by the magnitude of unipolar current in an orange-peel coupling system, enabling scalable multi-bit writing.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">MTJ</span>
+            <span class="tag tag-topic">VCMA</span>
+            <span class="tag tag-topic">Magnetic Memory</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">2</div>
+        <h3><a href="https://advanced.onlinelibrary.wiley.com/doi/10.1002/adma.202509228" target="_blank">A Widely Tunable Spin-Orbit Torque Device through the Silicon Compatible CMOS Platform</a></h3>
+        <div class="meta">
+            <span>Qi Lu, Bin Peng, Ming Liu et al.</span>
+            <span>Advanced Materials 38(4) (2026)</span>
+            <span>January 2026</span>
+        </div>
+        <p class="summary">Reports a large tunable and fully integrated SOT device on standard silicon CMOS technology. Uses an ultrathin ferroelectric film for voltage-controlled SOT with large tunability and low operating voltage. Demonstrates significant acceleration in write speed and lower current thresholds for MRAM.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">SOT</span>
+            <span class="tag tag-topic">CMOS</span>
+            <span class="tag tag-topic">MRAM</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">3</div>
+        <h3><a href="https://www.nature.com/articles/s44306-025-00122-y" target="_blank">Strain-Decoupled Magnetism in Flexible Spintronic Sensors</a></h3>
+        <div class="meta">
+            <span>Minsun Oh, Yubin Kim, Minjeong Ha</span>
+            <span>npj Spintronics 4, 3 (2026)</span>
+            <span>Jan 27, 2026</span>
+        </div>
+        <p class="summary">Comprehensive review addressing flexible spintronic sensors for wearables, implantable bioelectronics, and microrobotics. Focuses on the critical challenge of strain-induced inverse magnetostriction disrupting magnetic anisotropy, and reviews strategies for strain-decoupled magnetism.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">Flexible Sensors</span>
+            <span class="tag tag-topic">Magnetostriction</span>
+            <span class="tag tag-topic">Wearables</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">4</div>
+        <h3><a href="https://advanced.onlinelibrary.wiley.com/doi/10.1002/aelm.202500692" target="_blank">Analysis of Magnetic Switching in Magnetically Coupled Dual Free Layers Within MTJs for STT-MRAM</a></h3>
+        <div class="meta">
+            <span>Shujun Ye, Koichi Nishioka</span>
+            <span>Advanced Electronic Materials (2026)</span>
+            <span>Jan 29, 2026</span>
+        </div>
+        <p class="summary">Theoretically investigates magnetically coupled dual free layers in MTJs for STT-MRAM. Identifies four distinct switching phases depending on magnetic coupling energy and write current. Shows optimized coupling can halve the write current while achieving thermal stability above 128 in 30 nm devices.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">STT-MRAM</span>
+            <span class="tag tag-topic">MTJ</span>
+            <span class="tag tag-topic">Switching</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">5</div>
+        <h3><a href="https://www.nature.com/articles/s44306-025-00124-w" target="_blank">Terahertz Spin Torque Nano-Oscillator Based on a Ferrimagnetic Skyrmion Lattice</a></h3>
+        <div class="meta">
+            <span>L. Shen, Q. Shao, J. Akerman et al.</span>
+            <span>npj Spintronics 4, 5 (2026)</span>
+            <span>January 2026</span>
+        </div>
+        <p class="summary">Proposes a spin torque nano-oscillator based on a ferrimagnetic skyrmion lattice, where weak Magnus forces together with skyrmion-skyrmion interactions allow current-driven skyrmions to oscillate at terahertz frequencies. Relevant to neuromorphic computing applications.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">Skyrmions</span>
+            <span class="tag tag-topic">Spin Torque</span>
+            <span class="tag tag-topic">THz</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">6</div>
+        <h3><a href="https://arxiv.org/abs/2601.16575" target="_blank">The 2026 Skyrmionics Roadmap</a></h3>
+        <div class="meta">
+            <span>Sabri Koraltan et al. (67 co-authors)</span>
+            <span>arXiv preprint</span>
+            <span>Jan 23, 2026</span>
+        </div>
+        <p class="summary">Major community roadmap organized into 33 sections covering magnetic skyrmions and topological spin textures. Includes theory, material systems, skyrmion dynamics, DMI-stabilized structures, SOT-driven skyrmion motion, and device concepts for memory and computing.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">Skyrmions</span>
+            <span class="tag tag-topic">DMI</span>
+            <span class="tag tag-topic">Roadmap</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">7</div>
+        <h3><a href="https://journals.aps.org/prb/abstract/10.1103/y4nd-8d93" target="_blank">Domain Wall Skyrmion-Based Magnonic Crystal</a></h3>
+        <div class="meta">
+            <span>Z. Wang, X. Zheng, Z. Li, Z. Zhang, X. Wang</span>
+            <span>Physical Review B 113(1) (2026)</span>
+            <span>Jan 5, 2026</span>
+        </div>
+        <p class="summary">Constructs a magnonic crystal using a chain of domain wall skyrmions to manipulate spin-wave propagation. The skyrmion chain is created by leveraging voltage-controlled Dzyaloshinskii-Moriya interaction (DMI), bridging magnonics and skyrmionics.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">DMI</span>
+            <span class="tag tag-topic">Magnonics</span>
+            <span class="tag tag-topic">Domain Walls</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">8</div>
+        <h3><a href="https://www.nature.com/articles/s41565-024-01819-7" target="_blank">Anomalous Hall Spin Current Drives Self-Generated Spin-Orbit Torque in a Ferromagnet</a></h3>
+        <div class="meta">
+            <span>E. A. Montoya, X. Pei, I. N. Krivorotov</span>
+            <span>Nature Nanotechnology 20, 353-359</span>
+            <span>Jan 15, 2025</span>
+        </div>
+        <p class="summary">Landmark discovery of a fundamentally new SOT type: the "anomalous Hall torque," where anomalous Hall spin current in a ferromagnetic conductor generates a giant self-generated SOT large enough to negate magnetic damping and enable neuronal-mimicking nano-oscillators.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">SOT</span>
+            <span class="tag tag-topic">Hall Effect</span>
+            <span class="tag tag-topic">Neuromorphic</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">9</div>
+        <h3><a href="https://www.nature.com/articles/s41467-024-55437-x" target="_blank">Harnessing Orbital Hall Effect in Spin-Orbit Torque MRAM</a></h3>
+        <div class="meta">
+            <span>R. Gupta, C. Bouard, F. Kammerbauer et al.</span>
+            <span>Nature Communications 16, 130</span>
+            <span>Jan 2, 2025</span>
+        </div>
+        <p class="summary">Demonstrates ~30% enhancement in damping-like torque efficiency using Ru as an orbital Hall effect layer vs. pure Pt. Achieves ~20% reduction in switching current across 250+ devices and 60% reduction in switching power for SOT-MRAM.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">SOT-MRAM</span>
+            <span class="tag tag-topic">Orbital Hall Effect</span>
+            <span class="tag tag-topic">Energy Efficiency</span>
+        </div>
+    </div>
+
+    <div class="card paper">
+        <div class="rank">10</div>
+        <h3><a href="https://www.mdpi.com/2073-4360/18/4/477" target="_blank">Low-Power Three-Dimensional Graphene-Based Flexible Magnetic Sensor</a></h3>
+        <div class="meta">
+            <span>Polymers 18(4), 477</span>
+            <span>MDPI</span>
+            <span>Jan 26, 2026</span>
+        </div>
+        <p class="summary">Proposes a flexible, low-power 3D magneto-impedance sensor based on FeSiB/PI/graphene microcoil/PI/FeSiB heterostructure. Achieves 31 nT/Hz&#189; (x-axis) and 36 nT/Hz&#189; (y-axis) resolution with only 76 &#181;W power consumption for wearable and biomedical applications.</p>
+        <div class="tags">
+            <span class="tag tag-paper">Paper</span>
+            <span class="tag tag-topic">Flexible Sensors</span>
+            <span class="tag tag-topic">Graphene</span>
+            <span class="tag tag-topic">Low Power</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- ========== NEWS SECTION ========== -->
+<div id="news" class="section">
+    <div class="section-header">
+        <h2>Top 10 News &amp; Industry &mdash; January 2026</h2>
+        <div class="line"></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">1</div>
+        <h3><a href="https://www.mram-info.com/truth-memory-corporation-developed-worlds-first-8mb-sot-mram-chip-using-110-nm-process" target="_blank">Truth Memory Corporation Demonstrates World's First 8Mb SOT-MRAM Chip</a></h3>
+        <div class="meta"><span>MRAM-Info</span><span>Jan 31, 2026</span></div>
+        <p class="summary">China-based TMC demonstrated the world's first 8 Mb SOT-MRAM chip using 110 nm technology. The fully integrated wafer-level chip achieves sub-nanosecond write capability, write energy below 1 pJ/bit, and write-error rates down to 10&#8315;&#8310;. A major milestone in SOT-MRAM commercialization.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">SOT-MRAM</span><span class="tag tag-topic">Industry</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">2</div>
+        <h3><a href="https://advanced.onlinelibrary.wiley.com/doi/10.1002/adma.202509228" target="_blank">Tunable Spin-Orbit Torque Device Integrated with CMOS Platform</a></h3>
+        <div class="meta"><span>Advanced Materials</span><span>Jan 16, 2026</span></div>
+        <p class="summary">Researchers demonstrated a widely tunable SOT device fully compatible with standard silicon CMOS. Using an ultrathin ferroelectric film, they achieved large tunability of charge-to-spin conversion at low voltage. The hybrid MRAM devices show significant write speed acceleration and lower current thresholds.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">SOT</span><span class="tag tag-topic">CMOS Integration</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">3</div>
+        <h3><a href="https://www.businesswire.com/news/home/20251124984102/en/Neuranics-to-Launch-8-Channel-Magnetic-Sensing-Wristband-Prototype-for-Gesture-Recognition-at-CES-2026" target="_blank">Neuranics Debuts TMR-Based Magnetic Sensing Wristband at CES 2026</a></h3>
+        <div class="meta"><span>BusinessWire / CES 2026</span><span>Jan 6-9, 2026</span></div>
+        <p class="summary">Neuranics debuted its MiMiG Wristband at CES 2026: an 8-channel magnetomyography (MMG) wristband using ultra-sensitive TMR sensors (sub-5 pT detectivity) with custom ASICs and AI-enabled electronics. Captures muscle-generated magnetic signals for gesture control without electrodes.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">TMR Sensors</span><span class="tag tag-topic">Wearables</span><span class="tag tag-topic">AI</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">4</div>
+        <h3><a href="https://www.mram-info.com/avalanche-filed-lawsuit-against-everspin-saying-it-infringes-upon-4-its-mram-patents" target="_blank">Avalanche Technology Files Patent Lawsuit Against Everspin Over STT-MRAM</a></h3>
+        <div class="meta"><span>MRAM-Info / Bloomberg Law</span><span>Jan 28, 2026</span></div>
+        <p class="summary">Avalanche Technology filed a lawsuit and ITC complaint against Everspin alleging infringement of four STT-MRAM patents. Seeks to block imports of Everspin's chips. A major industry development highlighting the commercial stakes in MRAM technology.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">MRAM</span><span class="tag tag-topic">Patents</span><span class="tag tag-topic">Industry</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">5</div>
+        <h3><a href="https://www.globenewswire.com/news-release/2026/01/28/3227739/0/en/Spintronics-Market-to-Witness-36-48-CAGR-Amid-Surge-in-AI-IoT-and-Electric-Vehicles.html" target="_blank">Spintronics Market Projected at $49.33B by 2035 with 36.48% CAGR</a></h3>
+        <div class="meta"><span>GlobeNewsWire / Precedence Research</span><span>Jan 28, 2026</span></div>
+        <p class="summary">Global spintronics market valued at $3.03B in 2026, projected to reach $49.33B by 2035. MRAM dominates with 52% share. SOT is the fastest-growing segment due to sub-2 ns switching and 0.1 pJ/bit energy. TMR sensors account for 38% of metal-based devices. Key drivers: AI, IoT, EVs.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">Market</span><span class="tag tag-topic">Spintronics</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">6</div>
+        <h3><a href="https://www.mram-info.com/avalanche-and-nhanced-semiconductors-jointly-build-mram-powered-rad-hard-system-fpgas" target="_blank">Avalanche &amp; NHanced Build MRAM-Powered Rad-Hard FPGAs for Space</a></h3>
+        <div class="meta"><span>MRAM-Info / PRWeb</span><span>Jan 27, 2026</span></div>
+        <p class="summary">Avalanche Technology and NHanced Semiconductors partner to build radiation-hardened FPGAs using Space Grade MRAM for satellite and defense applications. Features inherent radiation immunity, permanent data retention, unlimited endurance, and nanosecond deterministic writes.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">MRAM</span><span class="tag tag-topic">Space</span><span class="tag tag-topic">Defense</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">7</div>
+        <h3><a href="https://phys.org/news/2026-01-quantum-boundary-size-kondo-effect.html" target="_blank">New Quantum Boundary: Spin Size Determines Kondo Effect Behavior</a></h3>
+        <div class="meta"><span>Phys.org / Osaka Metropolitan University</span><span>Jan 20, 2026</span></div>
+        <p class="summary">Researchers discovered that the Kondo effect behaves fundamentally differently depending on spin size. For spin-1/2, it suppresses magnetism, but for spin-1 and larger, it stabilizes long-range magnetic order. Establishes a new quantum boundary with implications for spintronics and quantum computing.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">Kondo Effect</span><span class="tag tag-topic">Quantum</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">8</div>
+        <h3><a href="https://www.sciencedaily.com/releases/2026/01/260106224627.htm" target="_blank">Magnetic Nanoparticles That Fight Bone Cancer and Promote Healing</a></h3>
+        <div class="meta"><span>ScienceDaily</span><span>Jan 7, 2026</span></div>
+        <p class="summary">Researchers developed magnetic nanocomposites with iron oxide nanoparticle cores wrapped in bioactive glass coatings. Under magnetic fields, they destroy tumor cells via magnetic hyperthermia while the bioactive coating bonds to bone and stimulates regeneration. A dual-function approach for cancer treatment.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">Nanoparticles</span><span class="tag tag-topic">Biomedical</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">9</div>
+        <h3><a href="https://www.nature.com/articles/s41378-025-01128-6" target="_blank">MEMS Resonators for Magnetic and Electric Field Sensing &mdash; Comprehensive Review</a></h3>
+        <div class="meta"><span>Nature Microsystems &amp; Nanoengineering</span><span>Jan 8, 2026</span></div>
+        <p class="summary">Comprehensive review of electrostatically actuated MEMS resonators for magnetic and electric field sensing. Highlights low power consumption, fast mechanical response, and CMOS-compatible fabrication. Classifies sensors by electromagnetic induction mechanisms.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">MEMS</span><span class="tag tag-topic">Magnetic Sensors</span><span class="tag tag-topic">Review</span></div>
+    </div>
+
+    <div class="card news">
+        <div class="rank">10</div>
+        <h3><a href="https://indico-tdli.sjtu.edu.cn/event/4709/" target="_blank">SOT-MRAM Research Seminar on High-Performance Embedded Memories</a></h3>
+        <div class="meta"><span>Tsung-Dao Lee Institute (TDLI), Shanghai</span><span>Jan 7, 2026</span></div>
+        <p class="summary">Seminar covering latest SOT-MRAM progress: field-free solutions, BEOL-compatible hybrid free layer concepts with high SOT efficiency, and pathways to replacing traditional cache memory. SOT-MRAM highlighted as offering 4x faster switching than STT-MRAM with GHz speeds and unlimited endurance.</p>
+        <div class="tags"><span class="tag tag-news">News</span><span class="tag tag-topic">SOT-MRAM</span><span class="tag tag-topic">Seminar</span></div>
+    </div>
+
+</div>
+
+<!-- ========== CONFERENCES SECTION ========== -->
+<div id="conferences" class="section">
+    <div class="section-header">
+        <h2>Upcoming Conferences</h2>
+        <div class="line"></div>
+    </div>
+
+    <p style="margin-bottom:1.5rem; color: var(--text-light); font-size:0.9rem;">Verified conferences from reputable societies (IEEE, APS, MRS, SPIE, EMA, E-MRS, DPG). Sorted chronologically. Past events are dimmed.</p>
+
+    <table class="conf-timeline">
+        <thead>
+            <tr>
+                <th>Dates</th>
+                <th>Conference</th>
+                <th>Location</th>
+                <th>Organizer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>8&ndash;13 Mar 2026</td>
+                <td><a href="https://dresden26.dpg-tagungen.de" target="_blank">DPG SKM 2026</a><br><small>Condensed Matter (incl. Magnetism division)</small></td>
+                <td>Dresden, Germany</td>
+                <td>DPG</td>
+            </tr>
+            <tr>
+                <td>16&ndash;20 Mar 2026</td>
+                <td><a href="https://summit.aps.org/" target="_blank">APS Global Physics Summit 2026</a><br><small>GMAG sessions: spintronics, nanomagnetism, SOT</small></td>
+                <td>Denver, CO, USA</td>
+                <td>APS</td>
+            </tr>
+            <tr>
+                <td>12&ndash;13 Apr 2026</td>
+                <td><a href="https://theisim.org/" target="_blank">iSIM 2026</a><br><small>Integrated Magnetics (co-located with INTERMAG)</small></td>
+                <td>Manchester, UK</td>
+                <td>IEEE Magnetics</td>
+            </tr>
+            <tr>
+                <td>12&ndash;16 Apr 2026</td>
+                <td><a href="https://spie.org/EPE26/conferencedetails/spintronics-and-nanomagnetism" target="_blank">SPIE Photonics Europe &mdash; Spintronics Track</a><br><small>Spintronics and Nanomagnetism</small></td>
+                <td>Strasbourg, France</td>
+                <td>SPIE</td>
+            </tr>
+            <tr>
+                <td>13&ndash;17 Apr 2026</td>
+                <td><a href="https://intermag2026.org/" target="_blank"><strong>INTERMAG 2026</strong></a><br><small>Premier IEEE magnetism conference</small></td>
+                <td>Manchester, UK</td>
+                <td>IEEE Magnetics</td>
+            </tr>
+            <tr>
+                <td>26 Apr&ndash;1 May 2026</td>
+                <td><a href="https://www.mrs.org/meetings-events/annual-meetings/2026-mrs-spring-meeting" target="_blank">MRS Spring 2026</a><br><small>Symposium QT01: Spintronics &mdash; New Materials &amp; Phenomena</small></td>
+                <td>Honolulu, HI, USA</td>
+                <td>MRS</td>
+            </tr>
+            <tr>
+                <td>8&ndash;11 May 2026</td>
+                <td><a href="https://www.wunspin2026.com/" target="_blank">WUN-SPIN 2026</a><br><small>6th WUN Spintronics Conference</small></td>
+                <td>Suzhou, China</td>
+                <td>WUN</td>
+            </tr>
+            <tr>
+                <td>25&ndash;28 May 2026</td>
+                <td><a href="https://moris2026.org/" target="_blank">MORIS 2026</a><br><small>20th Magnetics &amp; Optics Research Intl. Symposium</small></td>
+                <td>Nagasaki, Japan</td>
+                <td>Magnetics Soc. Japan / IEEE</td>
+            </tr>
+            <tr>
+                <td>25&ndash;29 May 2026</td>
+                <td><a href="https://www.european-mrs.com/meetings/2026-spring-meeting-exhibit" target="_blank">E-MRS Spring 2026</a><br><small>2D materials for magnetism &amp; spintronics</small></td>
+                <td>Strasbourg, France</td>
+                <td>E-MRS</td>
+            </tr>
+            <tr>
+                <td>8&ndash;10 Jun 2026</td>
+                <td><a href="https://int-spin-2026.sciencesconf.org/" target="_blank">INT-SPIN 2026</a><br><small>Intl. Network for Spintronics Conference</small></td>
+                <td>York, UK</td>
+                <td>EPSRC / York</td>
+            </tr>
+            <tr>
+                <td>29 Jun&ndash;3 Jul 2026</td>
+                <td><a href="https://trtm2026.sciencesconf.org/" target="_blank">TRTM 2026</a><br><small>3rd Transnational Round Table on Magnonics &amp; HF Spintronics</small></td>
+                <td>Poznan, Poland</td>
+                <td>European consortium</td>
+            </tr>
+            <tr>
+                <td>6&ndash;9 Jul 2026</td>
+                <td><a href="https://emsa2026.dryfta.com/" target="_blank"><strong>EMSA 2026</strong></a><br><small>XV European Magnetic Sensors &amp; Actuators. <em>Abstract deadline: 1 Mar 2026</em></small></td>
+                <td>Eindhoven, Netherlands</td>
+                <td>IEEE Magnetics</td>
+            </tr>
+            <tr>
+                <td>13&ndash;17 Jul 2026</td>
+                <td><a href="https://www.tuwien.at/en/phy/iap/conferences/3dmag-2026" target="_blank">3DMAG 2026</a><br><small>1st Intl. Symposium on 3D Nanomagnetism. <em>Abstract: 31 Mar 2026</em></small></td>
+                <td>Vienna, Austria</td>
+                <td>TU Wien</td>
+            </tr>
+            <tr>
+                <td>3&ndash;7 Aug 2026</td>
+                <td><a href="https://ieeemagnetics.org/conferences/magnetics-frontiers-conference" target="_blank">Magnetic Frontiers 2026</a><br><small>Focused IEEE conference on emerging applied magnetism</small></td>
+                <td>Hong Kong</td>
+                <td>IEEE Magnetics</td>
+            </tr>
+            <tr>
+                <td>17&ndash;21 Aug 2026</td>
+                <td><a href="https://magnetism.eu/6-agenda.htm" target="_blank">Spin Caloritronics XV</a><br><small>Coupled spin, charge, and heat transport</small></td>
+                <td>Denver, CO, USA</td>
+                <td>EMA</td>
+            </tr>
+            <tr>
+                <td>23&ndash;27 Aug 2026</td>
+                <td><a href="https://spie.org/opn/conferencedetails/spintronics" target="_blank">Spintronics XVIII (SPIE O+P)</a><br><small>MRAM, SOT, skyrmions, spin-caloric, THz</small></td>
+                <td>San Diego, CA, USA</td>
+                <td>SPIE</td>
+            </tr>
+            <tr>
+                <td>7&ndash;11 Sep 2026</td>
+                <td><a href="https://www.petaspin.com/tmag2026/" target="_blank">TMAG 2026</a><br><small>Trends in Magnetism: SOT, magnonics, neuromorphic, biomedical</small></td>
+                <td>Milan, Italy</td>
+                <td>PetaSpin / IEEE</td>
+            </tr>
+            <tr>
+                <td>14&ndash;17 Sep 2026</td>
+                <td><a href="https://www.european-mrs.com/meetings/2026-fall-meeting-exhibit" target="_blank">E-MRS Fall 2026</a><br><small>Magnetic materials symposia</small></td>
+                <td>Warsaw, Poland</td>
+                <td>E-MRS</td>
+            </tr>
+            <tr>
+                <td>28 Sep&ndash;2 Oct 2026</td>
+                <td><a href="https://umc2026.dryfta.com/" target="_blank">UMC 2026</a><br><small>7th Ultrafast Magnetism Conference</small></td>
+                <td>Eindhoven, Netherlands</td>
+                <td>IEEE Magnetics</td>
+            </tr>
+            <tr>
+                <td>5&ndash;8 Oct 2026</td>
+                <td><a href="https://sites.google.com/view/spinmechanics9" target="_blank">Spin Mechanics 9</a><br><small>Magnon-phonon coupling, spin pumping. <em>Reg. opens 24 Feb</em></small></td>
+                <td>Kyoto, Japan</td>
+                <td>Spin Mechanics community</td>
+            </tr>
+            <tr>
+                <td>2&ndash;6 Nov 2026</td>
+                <td><a href="https://ieeemagnetics.org/event/conference/71st-annual-conference-magnetism-and-magnetic-materials" target="_blank"><strong>MMM 2026</strong></a><br><small>71st Conf. on Magnetism &amp; Magnetic Materials</small></td>
+                <td>Honolulu, HI, USA</td>
+                <td>AIP / IEEE Magnetics</td>
+            </tr>
+            <tr>
+                <td>29 Nov&ndash;5 Dec 2026</td>
+                <td><a href="https://www.mrs.org/meetings-events/annual-meetings" target="_blank">MRS Fall 2026</a><br><small>Magnetic/spintronic materials symposia</small></td>
+                <td>Boston, MA, USA</td>
+                <td>MRS</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="margin-top:2rem; margin-bottom:1rem; color:var(--primary);">Save the Date &mdash; 2027</h3>
+    <table class="conf-timeline">
+        <thead>
+            <tr><th>Dates</th><th>Conference</th><th>Location</th><th>Organizer</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>20&ndash;25 Jun 2027</td>
+                <td><a href="https://icmfs2027.lbl.gov/" target="_blank">ICMFS 2027</a><br><small>26th Intl. Colloquium on Magnetic Films &amp; Surfaces</small></td>
+                <td>Berkeley, CA, USA</td>
+                <td>LBNL</td>
+            </tr>
+            <tr>
+                <td>2&ndash;6 Aug 2027</td>
+                <td><a href="https://magnonics2027.univie.ac.at/" target="_blank">Magnonics 2027</a><br><small>10th Intl. Conference on Magnonics</small></td>
+                <td>Vienna, Austria</td>
+                <td>Univ. Vienna</td>
+            </tr>
+            <tr>
+                <td>29 Aug&ndash;3 Sep 2027</td>
+                <td><a href="https://www.jems2027.eu/" target="_blank"><strong>JEMS 2027</strong></a><br><small>15th Joint European Magnetic Symposia</small></td>
+                <td>Prague, Czech Republic</td>
+                <td>EMA</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ========== CALLS SECTION ========== -->
+<div id="calls" class="section">
+    <div class="section-header">
+        <h2>Open &amp; Upcoming Funding Calls</h2>
+        <div class="line"></div>
+    </div>
+
+    <p style="margin-bottom:1.5rem; color: var(--text-light); font-size:0.9rem;">Only calls with deadlines after February 22, 2026. Sorted by deadline within each category.</p>
+
+    <!-- ===== NATIONAL ===== -->
+    <h3 class="call-category">National Calls (Israel)</h3>
+
+    <div class="call-card">
+        <h3><a href="https://www.scientifyresearch.org/grant/or-outstanding-researchers-grant-israel-science-foundation-isf/" target="_blank">ISF &mdash; Outstanding Researchers (OR) Grant</a></h3>
+        <div class="meta">
+            <span>Israel Science Foundation</span>
+            <span><span class="deadline-badge">Mar 9, 2026</span> (registration)</span>
+        </div>
+        <p class="summary">For outstanding senior scientists holding a tenured position at an Israeli research university. Supports high-impact individual research across all fields of basic science. Substantially higher budgets than standard ISF grants.</p>
+        <div class="tags"><span class="tag tag-call">National</span><span class="tag tag-topic">Basic Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.weizmann.ac.il/RGP/agency/148/fpset" target="_blank">ISF &mdash; Individual Research Grants (Cycle A)</a></h3>
+        <div class="meta">
+            <span>Israel Science Foundation</span>
+            <span><span class="deadline-badge upcoming">Jul 7, 2026</span> (registration, tentative)</span>
+        </div>
+        <p class="summary">Personal research grants for Israeli academic researchers across all fields of basic research, including physics. Grants typically run for 4 years. Approx. NIS 200,000&ndash;400,000/year.</p>
+        <div class="tags"><span class="tag tag-call">National</span><span class="tag tag-topic">Basic Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.weizmann.ac.il/RGP/agency/148/fpset" target="_blank">ISF &mdash; Individual Research Grants (Cycle B)</a></h3>
+        <div class="meta">
+            <span>Israel Science Foundation</span>
+            <span><span class="deadline-badge later">Nov 26, 2026</span> (registration, tentative)</span>
+        </div>
+        <p class="summary">Second annual cycle for individual research grants in all fields of basic science. Same scope and budget as Cycle A.</p>
+        <div class="tags"><span class="tag tag-call">National</span><span class="tag tag-topic">Basic Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.dfg.de/en/news/news-topics/announcements-proposals/2025/ifw-25-87" target="_blank">DIP &mdash; German-Israeli Project Cooperation (DFG/MOST)</a></h3>
+        <div class="meta">
+            <span>Ministry of Innovation, Science &amp; Technology + DFG</span>
+            <span><span class="deadline-badge">Mar 15, 2026</span> (full proposals to DFG)</span>
+            <span>Up to EUR 1.655M / 5 years</span>
+        </div>
+        <p class="summary">Supports collaborative research between German and Israeli scientists in all fields. 2&ndash;4 projects selected annually. Covers staff, materials, travel, and instrumentation. Requires German collaborator.</p>
+        <div class="tags"><span class="tag tag-call">National</span><span class="tag tag-topic">MOST</span><span class="tag tag-topic">Israel-Germany</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.m-era.net/joint-calls/joint-call-2026" target="_blank">M-ERA.NET Joint Call 2026 &mdash; Materials Research &amp; Innovation</a></h3>
+        <div class="meta">
+            <span>MOST (Israel side) via M-ERA.NET</span>
+            <span><span class="deadline-badge upcoming">Opens Mar 2026</span> (pre-proposals ~Jun 2026)</span>
+            <span>~EUR 100K per Israeli partner</span>
+        </div>
+        <p class="summary">Multilateral call for materials research supporting the European Green Deal. Themes: clean energy technologies, circular economy, digital technologies integration. TRL 2&ndash;4 eligible. <strong>Directly relevant to advanced materials/nanotechnology.</strong></p>
+        <div class="tags"><span class="tag tag-call">National</span><span class="tag tag-topic">MOST</span><span class="tag tag-topic">Materials</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://innovationisrael.org.il/en/program/promoting-applied-research-academia-nofar-kamin" target="_blank">IIA KAMIN &mdash; Applied Research in Academia</a></h3>
+        <div class="meta">
+            <span>Israel Innovation Authority</span>
+            <span><span class="deadline-badge upcoming">May 31, 2026</span></span>
+            <span>Up to NIS 440,000/year (85&ndash;90% grant)</span>
+        </div>
+        <p class="summary">Bridge between basic and applied research. Supports transformation of basic research into technologies with commercial application. Academic researchers at Israeli universities eligible. No royalty repayment. <strong>Highly relevant for PHE sensor / spintronics commercialization.</strong></p>
+        <div class="tags"><span class="tag tag-call">National</span><span class="tag tag-topic">IIA</span><span class="tag tag-topic">Applied Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://innovationisrael.org.il/en/program/promoting-applied-research-academia-nofar-kamin" target="_blank">IIA NOFAR &mdash; Early Applied Research</a></h3>
+        <div class="meta">
+            <span>Israel Innovation Authority</span>
+            <span><span class="deadline-badge upcoming">May 31, 2026</span></span>
+            <span>Up to NIS 550,000 / 12 months (90% grant)</span>
+        </div>
+        <p class="summary">Financing for initial applied research not yet mature enough for industry examination. Requires submission accompanied by a strategic industrial company or business entity. Relevant if you have an industry partner interested in your sensor technology.</p>
+        <div class="tags"><span class="tag tag-call">National</span><span class="tag tag-topic">IIA</span><span class="tag tag-topic">Industry Partner</span></div>
+    </div>
+
+    <!-- ===== HORIZON ===== -->
+    <h3 class="call-category">Horizon Europe / EU Calls</h3>
+
+    <div class="call-card">
+        <h3><a href="https://erc.europa.eu/apply-grant/proof-concept" target="_blank">ERC Proof of Concept 2026 (1st cut-off)</a></h3>
+        <div class="meta">
+            <span>European Research Council</span>
+            <span><span class="deadline-badge">Mar 17, 2026</span></span>
+            <span>EUR 150,000 lump sum / 18 months</span>
+        </div>
+        <p class="summary">For current or recent ERC grantees exploring commercial or societal potential of their ERC-funded research. 2nd cut-off: Sep 17, 2026.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">ERC</span><span class="tag tag-topic">Commercialization</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://marie-sklodowska-curie-actions.ec.europa.eu/node/1499" target="_blank">MSCA COFUND 2026</a></h3>
+        <div class="meta">
+            <span>Marie Sklodowska-Curie Actions</span>
+            <span><span class="deadline-badge">Apr 8, 2026</span></span>
+            <span>EUR 105.5M total</span>
+        </div>
+        <p class="summary">Co-funds doctoral or postdoctoral programmes at institutional level. Israel is eligible as an Associated Country.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">MSCA</span><span class="tag tag-topic">Training</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-cl4-2026-05-mat-prod-25" target="_blank">HORIZON-CL4-2026-05-MAT-PROD-25: IAM-Enabled Sensing Functionality (RIA)</a></h3>
+        <div class="meta">
+            <span>Horizon Europe, Cluster 4</span>
+            <span><span class="deadline-badge">Apr 15, 2026</span></span>
+            <span>~EUR 7.5M per project (EUR 22.5M total, 3 grants)</span>
+        </div>
+        <p class="summary">New or enhanced Innovative Advanced Materials enabled sensing functionality. Area A: multifunctional surfaces for environmental/health monitoring. Area B: miniaturized sensors for IoT, wearables &mdash; silicon-compatible, low power, high sensitivity. TRL 3&rarr;5-6. <strong>Directly relevant to magnetic sensor development.</strong></p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">Sensors</span><span class="tag tag-topic">Advanced Materials</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-cl4-2026-04-digital-emerging-17" target="_blank">HORIZON-CL4-2026-04-DIGITAL-EMERGING-17: Fostering 2D Materials Technologies (CSA)</a></h3>
+        <div class="meta">
+            <span>Horizon Europe, Cluster 4</span>
+            <span><span class="deadline-badge">Apr 15, 2026</span></span>
+            <span>EUR 1M (single grant)</span>
+        </div>
+        <p class="summary">Support for the 2DM research community: R&amp;I roadmapping, standardization, community building, and interaction with the Graphene Flagship and Innovative Advanced Materials partnership. Relevant to 2D magnetic materials and spintronics.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">2D Materials</span><span class="tag tag-topic">CSA</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-cl4-2026-01-mat-prod-05" target="_blank">HORIZON-CL4-2026-01-MAT-PROD-05: Circular Innovative Advanced Materials (RIA)</a></h3>
+        <div class="meta">
+            <span>Horizon Europe, Cluster 4</span>
+            <span><span class="deadline-badge">Apr 21, 2026</span></span>
+            <span>EUR 5&ndash;6.5M per project (EUR 37M total, 7 grants)</span>
+        </div>
+        <p class="summary">Circularity and resilient supply networks for advanced materials &mdash; <strong>explicitly includes magnets</strong> and metal alloys. Design-for-circularity, scale-up, digital tools. TRL 6&ndash;7. Relevant to sustainable magnetic materials research.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">Magnets</span><span class="tag tag-topic">Circular Materials</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-cl4-2026-01-mat-prod-23" target="_blank">HORIZON-CL4-2026-01-MAT-PROD-23: Accelerating Materials Discovery via AI (IA)</a></h3>
+        <div class="meta">
+            <span>Horizon Europe, Cluster 4</span>
+            <span><span class="deadline-badge">Apr 21, 2026</span></span>
+            <span>~EUR 13M per project (EUR 50M total, 4 grants)</span>
+        </div>
+        <p class="summary">Digital workflows (AI, self-driving labs, FAIR data) to accelerate design-make-test-learn cycles for innovative advanced materials. Relevant if applying AI/ML to discovery of new magnetic or spintronic materials.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">AI for Materials</span><span class="tag tag-topic">Innovation</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://marie-sklodowska-curie-actions.ec.europa.eu/calls/msca-staff-exchanges-2026" target="_blank">MSCA Staff Exchanges 2026</a></h3>
+        <div class="meta">
+            <span>Marie Sklodowska-Curie Actions</span>
+            <span><span class="deadline-badge">Apr 16, 2026</span></span>
+            <span>EUR 97.9M total</span>
+        </div>
+        <p class="summary">Supports international and inter-sectoral staff exchanges. Excellent for building collaborations with European partners in spintronics/nanomagnetism. Israel is eligible.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">MSCA</span><span class="tag tag-topic">Collaboration</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.chips-ju.europa.eu/" target="_blank">Chips JU &mdash; Global Innovation Actions 2026</a></h3>
+        <div class="meta">
+            <span>Chips Joint Undertaking</span>
+            <span><span class="deadline-badge upcoming">May 7, 2026</span></span>
+            <span>EUR 40M total</span>
+        </div>
+        <p class="summary">Open, market-oriented call for innovation actions in chip/semiconductor technology. Relevant for spintronics-based chip components or magnetic sensor integration.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">Chips JU</span><span class="tag tag-topic">Semiconductors</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-eic-2026-pathfinderopen-01" target="_blank">EIC Pathfinder Open 2026 (HORIZON-EIC-2026-PATHFINDEROPEN-01)</a></h3>
+        <div class="meta">
+            <span>European Innovation Council</span>
+            <span><span class="deadline-badge upcoming">May 12, 2026</span></span>
+            <span>Up to EUR 4M per project (EUR 166M total)</span>
+        </div>
+        <p class="summary">Early-stage high-risk/high-gain future technologies (TRL 1-4), open to <strong>any field</strong> including spintronics and magnetic sensors. Requires consortium of 3+ partners from 3+ countries. Israel eligible. 100% funding rate, lump sum.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">EIC</span><span class="tag tag-topic">Breakthrough Tech</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://erc.europa.eu/apply-grant/advanced-grant" target="_blank">ERC Advanced Grant 2026</a></h3>
+        <div class="meta">
+            <span>European Research Council</span>
+            <span><span class="deadline-badge upcoming">Aug 27, 2026</span> (opens May 28)</span>
+            <span>Up to EUR 2.5M / 5 years</span>
+        </div>
+        <p class="summary">For established, leading PIs pursuing ground-breaking, high-risk research. Open to all disciplines. Israel is an Associated Country. <strong>Highly relevant.</strong></p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">ERC</span><span class="tag tag-topic">Advanced Grant</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://eic.ec.europa.eu/eic-funding-opportunities/eic-transition_en" target="_blank">EIC Transition 2026</a></h3>
+        <div class="meta">
+            <span>European Innovation Council</span>
+            <span><span class="deadline-badge upcoming">Multiple: Mar 4, May 6, Jul 8, Sep 2, Nov 3</span></span>
+            <span>Up to EUR 2.5M; EUR 100M total</span>
+        </div>
+        <p class="summary">Supports maturation and validation of novel technologies from EIC Pathfinder, FET, or ERC Proof of Concept. Directly relevant if you have prior EIC/ERC results in spintronics.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">EIC</span><span class="tag tag-topic">Technology Maturation</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://marie-sklodowska-curie-actions.ec.europa.eu/calls/msca-postdoctoral-fellowships-2026" target="_blank">MSCA Postdoctoral Fellowships 2026</a></h3>
+        <div class="meta">
+            <span>Marie Sklodowska-Curie Actions</span>
+            <span><span class="deadline-badge later">Sep 9, 2026</span> (TBC)</span>
+            <span>EUR 404.3M total</span>
+        </div>
+        <p class="summary">For postdoctoral researchers of any nationality. European Fellowships can be hosted at institutions in Israel (Associated Country). Excellent for attracting postdocs in spintronics.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">MSCA</span><span class="tag tag-topic">Postdoc</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.chips-ju.europa.eu/" target="_blank">Chips JU &mdash; Focus Topics (Power, Photonics, Health)</a></h3>
+        <div class="meta">
+            <span>Chips Joint Undertaking</span>
+            <span><span class="deadline-badge later">Sep 17, 2026</span> (opens Jul 7)</span>
+            <span>EUR 20M per topic</span>
+        </div>
+        <p class="summary">Three focus topics. The Health topic could be relevant for magnetic sensors in biomedical applications.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">Chips JU</span><span class="tag tag-topic">Health</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-eic-2026-pathfinderchallenges-01" target="_blank">EIC Pathfinder Challenge: Advanced Materials for Miniaturised Energy Harvesting</a></h3>
+        <div class="meta">
+            <span>European Innovation Council</span>
+            <span><span class="deadline-badge later">Oct 28, 2026</span></span>
+            <span>Up to EUR 4M per project (EUR 32M for this challenge)</span>
+        </div>
+        <p class="summary">New generation of advanced materials for miniaturised energy harvesting devices (thermoelectric, piezoelectric, electromagnetic). Integration into energetically autonomous systems. Benchmark at TRL 4. Relevant if spin-caloritronic or magnetoelectric harvesting concepts are pursued.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">EIC</span><span class="tag tag-topic">Energy Harvesting</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://marie-sklodowska-curie-actions.ec.europa.eu/calls/msca-doctoral-networks-2026" target="_blank">MSCA Doctoral Networks 2026</a></h3>
+        <div class="meta">
+            <span>Marie Sklodowska-Curie Actions</span>
+            <span><span class="deadline-badge later">Nov 24, 2026</span> (TBC)</span>
+        </div>
+        <p class="summary">Funds networks of institutions training doctoral candidates. Could create a European doctoral network in spintronics/nanomagnetism. Israel eligible.</p>
+        <div class="tags"><span class="tag tag-call">Horizon</span><span class="tag tag-topic">MSCA</span><span class="tag tag-topic">Doctoral</span></div>
+    </div>
+
+    <!-- ===== US CALLS ===== -->
+    <h3 class="call-category">US Calls</h3>
+
+    <div class="call-card">
+        <h3><a href="https://www.nsf.gov/funding/opportunities/dmr-tmrp-division-materials-research-topical-materials-research" target="_blank">NSF DMR-TMRP &mdash; Condensed Matter Physics / Electronic Materials / Metals</a></h3>
+        <div class="meta">
+            <span>National Science Foundation</span>
+            <span><span class="deadline-badge upcoming">Rolling</span> (closed Apr 15&ndash;Jun 15)</span>
+        </div>
+        <p class="summary">Supports experimental and theoretical research in condensed matter physics, electronic/photonic materials, and metals. Available through the NSF-BSF joint program for US-Israel collaborations. Requires a US-based co-PI. $100K&ndash;$200K/year for 3 years.</p>
+        <div class="tags"><span class="tag tag-call">US</span><span class="tag tag-topic">NSF</span><span class="tag tag-topic">Materials Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://simpler.grants.gov/opportunity/be11b04b-43ee-4d14-8d37-5e7158a7eb08" target="_blank">AFOSR &mdash; Research Interests FY2026</a></h3>
+        <div class="meta">
+            <span>Air Force Office of Scientific Research</span>
+            <span><span class="deadline-badge later">Sep 30, 2026</span> (rolling)</span>
+            <span>$100K&ndash;$300K/year</span>
+        </div>
+        <p class="summary">Funds basic research in electronics, materials science, and physical sciences (including magnetism). International PIs can submit. ~$200M total program.</p>
+        <div class="tags"><span class="tag tag-call">US</span><span class="tag tag-topic">AFOSR</span><span class="tag tag-topic">Basic Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.grants.gov/search-results-detail/356605" target="_blank">ONR &mdash; Long Range BAA for Navy &amp; Marine Corps S&amp;T</a></h3>
+        <div class="meta">
+            <span>Office of Naval Research</span>
+            <span><span class="deadline-badge later">Sep 30, 2026</span></span>
+        </div>
+        <p class="summary">Basic and applied research relevant to Navy needs. Includes materials science and electronics. ONR Global maintains international collaborations with Israeli researchers.</p>
+        <div class="tags"><span class="tag tag-call">US</span><span class="tag tag-topic">ONR</span><span class="tag tag-topic">Defense</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://science.osti.gov/Funding-Opportunities" target="_blank">DOE &mdash; Basic Energy Sciences</a></h3>
+        <div class="meta">
+            <span>U.S. Department of Energy</span>
+            <span><span class="deadline-badge upcoming">Various 2026</span></span>
+        </div>
+        <p class="summary">Materials sciences program funds research in magnetism and spintronics. Less commonly funds international PIs directly, but accessible through collaborations.</p>
+        <div class="tags"><span class="tag tag-call">US</span><span class="tag tag-topic">DOE</span><span class="tag tag-topic">Materials Science</span></div>
+    </div>
+
+    <!-- ===== BI-NATIONAL ===== -->
+    <h3 class="call-category">Bi-National Calls</h3>
+
+    <div class="call-card">
+        <h3><a href="https://www.birdf.com/" target="_blank">BIRD Foundation &mdash; General Program 2026</a></h3>
+        <div class="meta">
+            <span>Israel-U.S. BIRD Foundation</span>
+            <span><span class="deadline-badge upcoming">May 14, 2026</span> (exec. summaries); <span class="deadline-badge upcoming">Jul 9</span> (full)</span>
+            <span>Up to $1M per project</span>
+        </div>
+        <p class="summary">Joint US-Israel industrial R&D projects. Relevant if developing magnetic sensors for commercial applications with a US partner company. Conditional grant repaid via royalties.</p>
+        <div class="tags"><span class="tag tag-call">Bi-National</span><span class="tag tag-topic">US-Israel</span><span class="tag tag-topic">Industry R&amp;D</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.dfg.de/en/research-funding/funding-opportunities/countries-regions/il-isf" target="_blank">ISF-DFG Joint Program (Israel-Germany)</a></h3>
+        <div class="meta">
+            <span>ISF + Deutsche Forschungsgemeinschaft</span>
+            <span><span class="deadline-badge later">Oct 2026</span> (ISF pre-registration)</span>
+        </div>
+        <p class="summary">Joint Israeli-German basic research in all fields. DFG is Lead Agency. Requires German partner. Excellent for spintronics collaborations with German groups.</p>
+        <div class="tags"><span class="tag tag-call">Bi-National</span><span class="tag tag-topic">Israel-Germany</span><span class="tag tag-topic">Basic Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.bsf.org.il/funding-opportunities/bsf-research-grants/about/" target="_blank">BSF &mdash; Regular Research Grants 2026</a></h3>
+        <div class="meta">
+            <span>US-Israel Binational Science Foundation</span>
+            <span><span class="deadline-badge later">Nov 2026</span> (physics eligible in even years)</span>
+            <span>~$50K&ndash;$80K/year per side, 4 years</span>
+        </div>
+        <p class="summary">Funds joint US-Israel research. 2026 is an even year, so physics is eligible for submission. Requires a US-based co-PI. Directly relevant to spintronics collaborations.</p>
+        <div class="tags"><span class="tag tag-call">Bi-National</span><span class="tag tag-topic">US-Israel</span><span class="tag tag-topic">Basic Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.snf.ch/en/6NiRBOzRU75VH5as/funding/projects/weave-lead-agency" target="_blank">ISF-SNSF Lead Agency Program (Israel-Switzerland)</a></h3>
+        <div class="meta">
+            <span>ISF + Swiss National Science Foundation</span>
+            <span><span class="deadline-badge later">Nov 2026</span></span>
+        </div>
+        <p class="summary">Joint Israeli-Swiss research under the Weave/Lead Agency procedure. All fields of basic research. Relevant for collaborations with Swiss groups (ETH, PSI, EPFL).</p>
+        <div class="tags"><span class="tag tag-call">Bi-National</span><span class="tag tag-topic">Israel-Switzerland</span><span class="tag tag-topic">Basic Research</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.bsf.org.il/funding-opportunities/nsf-bsf-joint-research-grants/the-programs/" target="_blank">NSF-BSF Joint Program &mdash; Physics / DMR Programs</a></h3>
+        <div class="meta">
+            <span>NSF + BSF</span>
+            <span><span class="deadline-badge later">Dec 8, 2026</span> (Physics); DMR rolling</span>
+            <span>NSF-scale grants ($100K&ndash;$200K/year US side)</span>
+        </div>
+        <p class="summary">Israeli PI submits to BSF; US PI submits to NSF. Covers Condensed Matter Physics, Electronic &amp; Photonic Materials, Metals. <strong>Highly relevant for spintronics/nanomagnetism.</strong></p>
+        <div class="tags"><span class="tag tag-call">Bi-National</span><span class="tag tag-topic">US-Israel</span><span class="tag tag-topic">NSF-BSF</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://www.gif.org.il/" target="_blank">GIF &mdash; German-Israeli Foundation</a></h3>
+        <div class="meta">
+            <span>GIF</span>
+            <span><span class="deadline-badge later">TBA 2026</span></span>
+            <span>EUR 100K&ndash;300K per project</span>
+        </div>
+        <p class="summary">Joint German-Israeli basic and applied research. Two tracks: collaborative (joint teams) and solo (early career). All fields of science. 2026 topics and deadlines expected soon.</p>
+        <div class="tags"><span class="tag tag-call">Bi-National</span><span class="tag tag-topic">Israel-Germany</span></div>
+    </div>
+
+    <div class="call-card">
+        <h3><a href="https://innovationisrael.org.il/en/calls_for_proposal/koril-rdf-korea-israel-industrial-rd-and-pilot-programs/" target="_blank">KORIL-RDF &mdash; Korea-Israel Industrial R&amp;D</a></h3>
+        <div class="meta">
+            <span>Korea-Israel R&amp;D Foundation</span>
+            <span><span class="deadline-badge later">TBA 2026</span> (rolling/periodic)</span>
+        </div>
+        <p class="summary">Joint Korea-Israel industrial R&amp;D. Focus areas include semiconductors, AI, quantum technologies. Requires Korean industry partner. Could be relevant for sensor commercialization.</p>
+        <div class="tags"><span class="tag tag-call">Bi-National</span><span class="tag tag-topic">Israel-Korea</span><span class="tag tag-topic">Industry</span></div>
+    </div>
+
+</div>
+
+</main>
+
+<footer>
+    <p>Spintronics Monthly Digest &mdash; Curated for the <a href="https://sites.biu.ac.il/en/klein-lab-spintronics" target="_blank">Klein Lab</a>, Department of Physics, Bar-Ilan University</p>
+    <p style="margin-top:0.3rem;">Generated February 2026 &bull; Based on <a href="https://physics.biu.ac.il/en/node/586" target="_blank">Prof. Lior Klein's</a> research profile</p>
+</footer>
+
+<script>
+    function showSection(id, btn) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
