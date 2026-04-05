@@ -681,6 +681,58 @@ $updatedHtml = Update-WebsiteHtml -HtmlPath $indexPath -Papers $topPapers -NewsI
 # Write updated HTML
 Set-Content -Path $indexPath -Value $updatedHtml -Encoding UTF8
 Write-Log "Website updated successfully with $($topPapers.Count) papers and $($topNews.Count) news items"
+
+# Deploy to GitHub Pages
+$ghRepoUrl = if ($appConfig.githubRepoUrl) { $appConfig.githubRepoUrl } else { "" }
+if ($ghRepoUrl -and $ghRepoUrl -ne "") {
+    Write-Log "--- Deploying to GitHub Pages ---"
+    $tempRepo = Join-Path ([System.IO.Path]::GetTempPath()) "spintronics-digest-deploy"
+
+    try {
+        # Clean up any previous temp clone
+        if (Test-Path $tempRepo) {
+            Remove-Item -Path $tempRepo -Recurse -Force
+        }
+
+        # Clone the repo
+        Write-Log "Cloning $ghRepoUrl..."
+        & git clone --depth 1 $ghRepoUrl $tempRepo 2>&1 | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "git clone failed" }
+
+        # Copy updated index.html
+        Copy-Item -Path $indexPath -Destination (Join-Path $tempRepo "index.html") -Force
+
+        # Commit and push
+        $monthYear = (Get-Date).ToString("MMMM yyyy")
+        Push-Location $tempRepo
+        & git add index.html 2>&1 | Out-Null
+
+        # Check if there are changes to commit
+        $status = & git status --porcelain 2>&1
+        if ($status) {
+            & git commit -m "Update digest to $monthYear (automated)" 2>&1 | Out-Null
+            & git push origin master 2>&1 | Out-Null
+            if ($LASTEXITCODE -eq 0) {
+                Write-Log "Deployed to GitHub Pages successfully"
+            } else {
+                Write-Log "git push failed" "ERROR"
+            }
+        } else {
+            Write-Log "No changes to deploy (index.html unchanged)"
+        }
+        Pop-Location
+
+        # Clean up
+        Remove-Item -Path $tempRepo -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    catch {
+        Write-Log "Error deploying to GitHub: $_" "ERROR"
+        Pop-Location -ErrorAction SilentlyContinue
+    }
+} else {
+    Write-Log "No githubRepoUrl configured, skipping deployment"
+}
+
 Write-Log "=== Monthly Website Update finished (success) ==="
 exit 0
 
